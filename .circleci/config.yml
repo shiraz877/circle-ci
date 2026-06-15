@@ -1,0 +1,25 @@
+
+version: 2.1
+
+jobs:
+  robonito-tests:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Trigger Robonito tests
+          command: |
+            # Add your Robonito API key as a CircleCI project environment variable named ROBONITO_API_KEY
+            curl -sS -X POST "https://api.robonito.com/integration/circleci/trigger/f27b610b-06fa-4685-8739-e197649c9e73" \
+              -H "Content-Type: application/json" \
+              -H "x-robonito-api-key: $ROBONITO_API_KEY" \
+              -d '{
+              "suiteId": "2099b2b6-f5a3-45f3-9070-f0acb6691f0c",
+              "circleciJobName": "$CIRCLE_JOB",
+              "circleciBuildNumber": '$CIRCLE_BUILD_NUM'
+            }'
+
+workflows:
+  robonito:
+    jobs:
+      - robonito-tests
